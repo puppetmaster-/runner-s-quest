@@ -1,3 +1,7 @@
+use comfy::*;
+
+use crate::game::ComfyGame;
+
 mod state;
 mod game;
 mod tilemap;
@@ -6,9 +10,6 @@ mod player;
 mod items;
 mod assets;
 mod door;
-
-use comfy::*;
-use crate::game::ComfyGame;
 
 const WINDOW_WIDTH: f32 = 1024.0;
 const WINDOW_HIGHT: f32 = 512.0;
@@ -28,6 +29,7 @@ fn main() {
         wasm_bindgen_futures::spawn_local(run());
     }
 }
+
 pub async fn run() {
     init_game_config(
         "Runner's Quest".to_string(),

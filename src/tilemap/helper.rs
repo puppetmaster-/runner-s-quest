@@ -1,5 +1,7 @@
 use comfy::*;
+
 use crate::state::GameState;
+use crate::tilemap::Tilemap;
 
 pub fn is_ladder(id: Option<u32>) -> bool {
     is_ladder_or(&[id])
@@ -7,11 +9,11 @@ pub fn is_ladder(id: Option<u32>) -> bool {
 
 #[allow(dead_code)]
 pub fn is_ladder_and(ids: &[Option<u32>]) -> bool {
-    return !ids.iter().any(|id|*id != Some(8));
+    return !ids.iter().any(|id| *id != Some(8));
 }
 
 pub fn is_ladder_or(ids: &[Option<u32>]) -> bool {
-    return ids.iter().any(|id|*id == Some(8));
+    return ids.iter().any(|id| *id == Some(8));
 }
 
 pub fn is_wall(id: Option<u32>) -> bool {
