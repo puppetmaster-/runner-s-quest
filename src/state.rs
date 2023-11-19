@@ -14,13 +14,14 @@ pub struct GameState {
 impl GameState {
     pub fn new(tilemaps: Vec<Tilemap>) -> Self {
         let tilemap = tilemaps[0].clone();
+        let max = tilemaps.len() + 1;
         Self {
             scene: Scene::LoadMenu,
             tilemaps,
             tilemap,
             climb_timer: 0.0,
             level: 1,
-            max_level: tilemaps.len() + 1,
+            max_level: max,
             has_key: false,
             has_ladder: false,
         }
