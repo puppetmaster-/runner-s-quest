@@ -29,4 +29,8 @@ pub fn load_sprites(c: &mut EngineContext) {
         "sprites",
         include_bytes!("../assets/sprite.png")
     );
+    c.load_texture_from_bytes(
+        "door",
+        include_bytes!("../assets/door_16x32.png")
+    );
 }

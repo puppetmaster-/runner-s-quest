@@ -2,7 +2,7 @@ use comfy::*;
 
 use crate::state::{GameState, Scene};
 use crate::tilemap::Tilemap;
-use crate::{items, player, WINDOW_HIGHT, WINDOW_WIDTH};
+use crate::{door, items, player, WINDOW_HIGHT, WINDOW_WIDTH};
 use crate::assets::load_sprites;
 
 
@@ -85,6 +85,8 @@ fn setup_load_game(state: &mut GameState) {
     items::spawn_pulley(item_pulley_pos[0]+TILEMAP_ORIGIN + vec2(0.0, -8.0));
     let item_key_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"),26);
     items::spawn_key(item_key_pos[0]+TILEMAP_ORIGIN + vec2(0.0, -8.0));
+    let door_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"),11);
+    door::spawn(door_pos[0]+TILEMAP_ORIGIN+ vec2(0.0, -8.0));
     state.scene = Scene::Game;
 }
 
@@ -121,9 +123,11 @@ fn draw(state: & GameState) {
 }
 
 fn draw_play(state: &GameState) {
-    state.tilemap.draw(texture_id("tileset"),TILEMAP_ORIGIN,Some(2),3, WHITE);
-    state.tilemap.draw(texture_id("tileset"),TILEMAP_ORIGIN,Some(1),2, WHITE);
-    state.tilemap.draw(texture_id("tileset"),TILEMAP_ORIGIN,Some(0),1, GRAY);
+    state.tilemap.draw(texture_id("tileset"),TILEMAP_ORIGIN,state.tilemap.get_layer_id("deco2"),7, WHITE);
+    state.tilemap.draw(texture_id("tileset"),TILEMAP_ORIGIN,state.tilemap.get_layer_id("deco"),6, WHITE);
+    state.tilemap.draw(texture_id("tileset"),TILEMAP_ORIGIN,state.tilemap.get_layer_id("level"),3, WHITE);
+    state.tilemap.draw(texture_id("tileset"),TILEMAP_ORIGIN,state.tilemap.get_layer_id("background"),2, GRAY);
+    state.tilemap.draw(texture_id("tileset"),TILEMAP_ORIGIN,state.tilemap.get_layer_id("background2"),1, GRAY);
 }
 
 fn draw_menu(_state: &GameState) {
@@ -142,6 +146,7 @@ fn update(state: &mut GameState, c: &mut EngineContext) {
 fn update_menu(_state: &mut GameState,_c: &mut EngineContext) {
 }
 fn update_play(state: &mut GameState,c: &mut EngineContext) {
+    door::update(state, c);
     items::update(state, c);
 }
 

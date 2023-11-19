@@ -27,5 +27,5 @@ pub fn is_air(id: Option<u32>) -> bool {
 }
 
 pub fn get_id(state: &GameState, position: Vec2) -> Option<u32> {
-    state.tilemap.get_id_at_position(1, position)
+    state.tilemap.get_id_at_position(state.tilemap.get_layer_id("level"), position)
 }

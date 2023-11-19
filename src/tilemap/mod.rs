@@ -197,13 +197,13 @@ impl Tilemap{
 
     //OK
     pub fn draw_layer(&mut self, texture: TextureHandle, pos: Vec2, layer_to_draw: usize, z_index: i32, tint: Color) {
-        self.draw(texture, pos,Some(layer_to_draw),z_index, tint);
+        self.draw(texture, pos,layer_to_draw,z_index, tint);
     }
 
     //OK
-    pub fn draw(&self, texture: TextureHandle, pos: Vec2, layer_to_draw: Option<usize>, z_index: i32, tint: Color) {
+    pub fn draw(&self, texture: TextureHandle, pos: Vec2, layer_to_draw: usize, z_index: i32, tint: Color) {
         for (i, layer) in self.layers.iter().enumerate() {
-            if layer.visibility && layer_to_draw.is_none() || layer_to_draw.is_some() && i == layer_to_draw.unwrap(){
+            if i == layer_to_draw{
                 for tile in layer.tiles.get_data().iter().filter(|t| t.is_some()) {
                     match tile {
                         None => (),

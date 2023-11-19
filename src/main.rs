@@ -5,6 +5,7 @@ mod utils;
 mod player;
 mod items;
 mod assets;
+mod door;
 
 use comfy::*;
 use crate::game::ComfyGame;
