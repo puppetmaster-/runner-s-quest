@@ -9,4 +9,5 @@
 - [ ] Create logic for completing a level and loading the next one.
 - [ ] Integrate sound effects.
 - [ ] Incorporate background music.
-- [ ] Design and implement a credits scene.
+- [ ] Design and implement a credits' scene.
+- [ ] Implement shaders for the level transition (../shader/scene_change.frag)
