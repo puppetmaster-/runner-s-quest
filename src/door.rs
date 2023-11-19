@@ -30,5 +30,11 @@ pub fn update(state: &mut GameState, c: &mut EngineContext) {
     for (_, (_, animated_sprite, )) in
     world().query::<(&Door, &mut AnimatedSprite)>().iter()
     {
+        if !state.has_key {
+            animated_sprite.play("close");
+            animated_sprite.state.timer = 0.0;
+        } else {
+            animated_sprite.play("open");
+        }
     }
 }
