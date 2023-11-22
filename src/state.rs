@@ -8,7 +8,7 @@ pub struct GameState {
     pub level: usize,
     max_level: usize,
     pub has_key: bool,
-    pub has_ladder: bool,
+    pub ladder: usize,
 }
 
 impl GameState {
@@ -23,23 +23,48 @@ impl GameState {
             level: 1,
             max_level: max,
             has_key: false,
-            has_ladder: false,
+            ladder: 0,
         }
     }
     pub fn restart(&mut self) {
-        self.has_ladder = false;
+        println!("restart");
+        self.ladder = 0;
         self.has_key = false;
         self.tilemap = self.tilemaps[self.level - 1].clone();
     }
 
     pub fn next_level(&mut self) {
-        self.has_ladder = false;
+        println!("next_level");
+        self.ladder = 0;
         self.has_key = false;
-        if self.level == self.max_level {
+        if self.level < self.max_level {
+            println!("go loading next level");
             self.level += 1;
+            self.tilemap = self.tilemaps[self.level - 1].clone();
+            self.scene = Scene::LoadLevel;
         } else {
+            println!("go loading credit");
             self.scene = Scene::LoadCredit;
         }
+    }
+    pub fn exit_level(&mut self) {
+        println!("exit_level");
+        self.scene = Scene::ExitLevel;
+    }
+
+    pub fn give_ladder(&mut self) -> bool {
+        println!("give_ladder");
+        if self.ladder > 0 {
+            self.ladder -= 1;
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    pub fn pickup_ladder(&mut self){
+        println!("pickup_ladder");
+        self.ladder += 1;
     }
 }
 
@@ -47,8 +72,10 @@ impl GameState {
 pub enum Scene {
     LoadMenu,
     Menu,
-    LoadGame,
+    LoadLevel,
     Game,
+    EnterLevel,
+    ExitLevel,
     LoadCredit,
     Credit,
 }

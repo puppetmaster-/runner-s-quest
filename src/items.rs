@@ -1,13 +1,29 @@
 use comfy::*;
 
 use crate::state::GameState;
+use crate::tilemap::tilemap_helper::{get_id, get_id_logic, TILEMAP_ORIGIN};
+
+const ID_LADDER: u32 = 24;
+const ID_PULLEY: u32 = 25;
+const ID_KEY: u32 = 26;
 
 pub struct Item;
+pub struct Key;
+pub struct Ladder;
+pub struct Pulley;
+
+pub fn spawn_ladders(state: &mut GameState) {
+    let positions = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), ID_LADDER);
+    for p in positions {
+        spawn_ladder(p + TILEMAP_ORIGIN + vec2(0.0, -8.0));
+    }
+}
 
 pub fn spawn_ladder(pos: Vec2) {
     commands().spawn((
         Transform::position(pos),
         Item,
+        Ladder,
         get_tween(),
         AnimatedSpriteBuilder::new()
             .z_index(10)
@@ -24,10 +40,18 @@ pub fn spawn_ladder(pos: Vec2) {
     ));
 }
 
+pub fn spawn_pulleys(state: &mut GameState) {
+    let positions = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), ID_PULLEY);
+    for p in positions {
+        spawn_pulley(p + TILEMAP_ORIGIN + vec2(0.0, -8.0));
+    }
+}
+
 pub fn spawn_pulley(pos: Vec2) {
     commands().spawn((
         Transform::position(pos),
         Item,
+        Pulley,
         get_tween(),
         AnimatedSpriteBuilder::new()
             .z_index(10)
@@ -44,10 +68,19 @@ pub fn spawn_pulley(pos: Vec2) {
     ));
 }
 
+pub fn spawn_keys(state: &mut GameState) {
+    let positions = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), ID_KEY);
+    for p in positions {
+        println!("get_id = {:?}",get_id(state,p));
+        spawn_key(p + TILEMAP_ORIGIN + vec2(0.0, -8.0));
+    }
+}
+
 pub fn spawn_key(pos: Vec2) {
     commands().spawn((
         Transform::position(pos),
         Item,
+        Key,
         get_tween(),
         AnimatedSpriteBuilder::new()
             .z_index(10)
@@ -82,4 +115,19 @@ pub fn update(_state: &mut GameState, c: &mut EngineContext) {
 
 pub fn get_tween() -> Tween {
     Tween::new(-0.1, 0.1, random_range(3.0, 4.0), 0.0, roundtrip)
+}
+
+pub(crate) fn pickup(state: &mut GameState, player_pos: &Vec2) {
+    let id = get_id_logic(state, *player_pos);
+    if id == Some(ID_KEY){
+        state.has_key = true;
+        for (entity, (_, transform, _)) in
+        world().query::<(&Item, &mut Transform, &mut Key)>().iter()
+        {
+            commands().despawn(entity);
+        }
+    }
+    if id== Some(ID_LADDER){
+        state.give_ladder();
+    }
 }

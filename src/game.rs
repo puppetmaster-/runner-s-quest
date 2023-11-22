@@ -1,11 +1,11 @@
 use comfy::*;
+use comfy::log::{Level, log};
 
 use crate::{door, items, player, WINDOW_HIGHT, WINDOW_WIDTH};
 use crate::assets::load_sprites;
 use crate::state::{GameState, Scene};
 use crate::tilemap::tilemap_helper;
-
-const TILEMAP_ORIGIN: Vec2 = vec2(8.0, 8.0);
+use crate::tilemap::tilemap_helper::TILEMAP_ORIGIN;
 
 
 pub struct ComfyGame {
@@ -35,8 +35,8 @@ impl GameLoop for ComfyGame {
             //game_config_mut().dev.show_fps = true;
             //c.renderer.window().set_fullscreen(Some(Fullscreen::Borderless(None)));
             c.renderer.window().set_resizable(false);
-            main_camera_mut().zoom = 512.0;
-            main_camera_mut().center = vec2(512.0 / 2.0, -256.0 / 2.0);
+            main_camera_mut().zoom = WINDOW_WIDTH / 2.0;
+            main_camera_mut().center = vec2(WINDOW_WIDTH / 2.0, -WINDOW_HIGHT / 2.0);
             load_sprites(&mut c);
             let state = GameState::new(tilemap_helper::load_levels());
             self.state = Some(state);
@@ -61,27 +61,25 @@ impl GameLoop for ComfyGame {
 fn setup(state: &mut GameState, _c: &mut EngineContext) {
     match state.scene {
         Scene::LoadMenu => { setup_load_menu(state) }
-        Scene::LoadGame => { setup_load_game(state) }
+        Scene::LoadLevel => { setup_load_level(state) }
         _ => {}
     }
 }
 
 fn setup_load_menu(state: &mut GameState) {
+    println!("setup_load_menu");
     state.scene = Scene::Menu;
 }
 
-fn setup_load_game(state: &mut GameState) {
-    let player_spawn_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), 16);
-    player::spawn(player_spawn_pos[0] + TILEMAP_ORIGIN + vec2(0.0, -5.0));
-    let item_ladder_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), 24);
-    items::spawn_ladder(item_ladder_pos[0] + TILEMAP_ORIGIN + vec2(0.0, -8.0));
-    let item_pulley_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), 25);
-    items::spawn_pulley(item_pulley_pos[0] + TILEMAP_ORIGIN + vec2(0.0, -8.0));
-    let item_key_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), 26);
-    items::spawn_key(item_key_pos[0] + TILEMAP_ORIGIN + vec2(0.0, -8.0));
-    let door_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), 11);
-    door::spawn(door_pos[0] + TILEMAP_ORIGIN + vec2(0.0, -8.0));
-    state.scene = Scene::Game;
+fn setup_load_level(state: &mut GameState) {
+    println!("setup_load_level");
+    //TODO dispawn everything
+    items::spawn_ladders(state);
+    items::spawn_pulleys(state);
+    items::spawn_keys(state);
+    player::spawns(state);
+    door::spawns(state);
+    state.scene = Scene::EnterLevel;
 }
 
 
@@ -92,13 +90,13 @@ fn handle_input(state: &mut GameState, c: &mut EngineContext) {
                 std::process::exit(0);
             }
             if is_key_pressed(KeyCode::Return) {
-                println!("switch to game!");
-                state.scene = Scene::LoadGame;
+                println!("switch to loadLevel!");
+                state.scene = Scene::LoadLevel;
             }
         }
         Scene::Game => {
             if is_key_pressed(KeyCode::Escape) {
-                println!("switch to menu!");
+                println!("switch to loadMenu!");
                 state.scene = Scene::LoadMenu;
             }
             player::handle_input(state, c);
@@ -108,15 +106,37 @@ fn handle_input(state: &mut GameState, c: &mut EngineContext) {
 }
 
 
-fn draw(state: &GameState) {
+fn draw(state: &mut GameState) {
     match state.scene {
         Scene::Menu => { draw_menu(state) }
         Scene::Game => { draw_play(state) }
+        Scene::EnterLevel => {
+            draw_enter_transition(state);
+            draw_play(state);
+        }
+        Scene::ExitLevel => {
+            draw_exit_transition(state);
+            draw_play(state);
+        }
         _ => {}
     }
 }
 
+fn draw_exit_transition(state: &mut GameState) {
+    println!("draw_exit_transition");
+    // when finish call state.next_level()
+    state.next_level();
+}
+
+fn draw_enter_transition(state: &mut GameState) {
+    println!("draw_enter_transition");
+    // when finish change state.scene = Scene::Game
+    state.scene = Scene::Game;
+}
+
+
 fn draw_play(state: &GameState) {
+    println!("draw_play");
     state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("deco2"), 7, WHITE);
     state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("deco"), 6, WHITE);
     state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("level"), 3, WHITE);
@@ -125,7 +145,8 @@ fn draw_play(state: &GameState) {
 }
 
 fn draw_menu(_state: &GameState) {
-    draw_sprite(texture_id("game_logo"), vec2(WINDOW_WIDTH / 4.0, WINDOW_HIGHT / 4.0 * -1.0), WHITE, 0, vec2(128.0 * 2.0, 48.0 * 2.0))
+    println!("draw_menu");
+    draw_sprite(texture_id("game_logo"), vec2(WINDOW_WIDTH / 2.0, WINDOW_HIGHT / 2.0 * -1.0), WHITE, 0, vec2(128.0 * 2.0, 48.0 * 2.0))
 }
 
 
@@ -137,9 +158,12 @@ fn update(state: &mut GameState, c: &mut EngineContext) {
     }
 }
 
-fn update_menu(_state: &mut GameState, _c: &mut EngineContext) {}
+fn update_menu(_state: &mut GameState, _c: &mut EngineContext) {
+    println!("update_menu");
+}
 
 fn update_play(state: &mut GameState, c: &mut EngineContext) {
+    println!("update_play");
     door::update(state, c);
     items::update(state, c);
 }

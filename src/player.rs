@@ -1,9 +1,17 @@
 use comfy::*;
+use crate::{door, items};
 
 use crate::state::GameState;
 use crate::tilemap::tilemap_helper::{get_id, is_air, is_ladder, is_ladder_or, is_not_wall};
 
+use crate::tilemap::tilemap_helper::TILEMAP_ORIGIN;
+
 pub struct Player;
+
+pub fn spawns(state: &mut GameState) {
+    let player_spawn_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), 16);
+    spawn(player_spawn_pos[0] + TILEMAP_ORIGIN + vec2(0.0, -5.0));
+}
 
 pub fn spawn(pos: Vec2) {
     commands().spawn((
@@ -59,6 +67,9 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
     world().query::<(&Player, &mut AnimatedSprite, &mut Transform)>().iter()
     {
         let pos = vec2(transform.position.x, transform.position.y - 5.0);
+
+        items::pickup(state,&pos);
+
         let check_move_left = pos + vec2(-8.0, 0.0);
         let check_move_right = pos + vec2(8.0, 0.0);
         let check_ladder_pos = pos + vec2(0.0, -7.0);
@@ -143,6 +154,8 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
                 animated_sprite.play("idle");
             }
         }
+
+        door::exit(state,&pos);
 
         //draw_circle(pos,2.0,WHITE,100);
         //draw_circle(check_move_left, 1.0, GREEN, 100);
