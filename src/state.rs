@@ -13,23 +13,25 @@ pub struct GameState {
 
 impl GameState {
     pub fn new(tilemaps: Vec<Tilemap>) -> Self {
-        let tilemap = tilemaps[0].clone();
+        let level = 1;
+        let tilemap = tilemaps[level - 1].clone();
         let max = tilemaps.len() + 1;
         Self {
             scene: Scene::LoadMenu,
             tilemaps,
             tilemap,
             climb_timer: 0.0,
-            level: 1,
+            level,
             max_level: max,
             has_key: false,
-            ladder: 0,
+            ladder: 0
         }
     }
     pub fn restart(&mut self) {
         println!("restart");
         self.ladder = 0;
         self.has_key = false;
+        self.climb_timer = 0.0;
         self.tilemap = self.tilemaps[self.level - 1].clone();
     }
 
@@ -37,6 +39,7 @@ impl GameState {
         println!("next_level");
         self.ladder = 0;
         self.has_key = false;
+        self.climb_timer = 0.0;
         if self.level < self.max_level {
             println!("go loading next level");
             self.level += 1;

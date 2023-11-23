@@ -2,7 +2,7 @@ use comfy::*;
 use crate::{door, items};
 
 use crate::state::GameState;
-use crate::tilemap::tilemap_helper::{get_id, is_air, is_ladder, is_ladder_or, is_not_wall};
+use crate::tilemap::tilemap_helper::{get_id, is_air, is_ladder, is_ladder_or, is_missing_ladder, is_not_wall, set_ladder_at};
 
 use crate::tilemap::tilemap_helper::TILEMAP_ORIGIN;
 
@@ -66,6 +66,7 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
     for (_, (_, animated_sprite, transform)) in
     world().query::<(&Player, &mut AnimatedSprite, &mut Transform)>().iter()
     {
+
         let pos = vec2(transform.position.x, transform.position.y - 5.0);
 
         items::pickup(state,&pos);
@@ -100,6 +101,11 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
             move_dir.y -= 1.0;
             fall = true;
         } else {
+            if is_missing_ladder(id_middle) && is_action_up() && state.give_ladder(){
+                set_ladder_at(state,pos);
+                move_dir.y += 1.0;
+                climb = true;
+            }
             if is_action_up() && (is_ladder(id_ladder_up) || is_ladder(id_middle)) {
                 move_dir.y += 1.0;
                 climb = true;
@@ -138,6 +144,7 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
                 animated_sprite.play("climb");
             }
         } else if fall {
+
             let dis = move_dir.normalize_or_zero() * (speed + 20.0) * dt;
             transform.position += dis;
             animated_sprite.play("fall");

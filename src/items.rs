@@ -11,6 +11,8 @@ pub struct Item;
 pub struct Key;
 pub struct Ladder;
 pub struct Pulley;
+pub struct Identifier { x: i32, y: i32, }
+
 
 pub fn spawn_ladders(state: &mut GameState) {
     let positions = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), ID_LADDER);
@@ -24,6 +26,7 @@ pub fn spawn_ladder(pos: Vec2) {
         Transform::position(pos),
         Item,
         Ladder,
+        get_identifier(pos),
         get_tween(),
         AnimatedSpriteBuilder::new()
             .z_index(10)
@@ -38,6 +41,12 @@ pub fn spawn_ladder(pos: Vec2) {
             .blend_mode(BlendMode::Alpha)
             .build(),
     ));
+}
+
+fn get_identifier(pos: Vec2) -> Identifier {
+    let x = ((pos.x - pos.x % 16.0) / 16.0) as i32;
+    let y = ((pos.y - pos.y % 16.0) / 16.0) as i32;
+    Identifier{x, y}
 }
 
 pub fn spawn_pulleys(state: &mut GameState) {
@@ -71,7 +80,6 @@ pub fn spawn_pulley(pos: Vec2) {
 pub fn spawn_keys(state: &mut GameState) {
     let positions = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), ID_KEY);
     for p in positions {
-        println!("get_id = {:?}",get_id(state,p));
         spawn_key(p + TILEMAP_ORIGIN + vec2(0.0, -8.0));
     }
 }
@@ -128,6 +136,15 @@ pub(crate) fn pickup(state: &mut GameState, player_pos: &Vec2) {
         }
     }
     if id== Some(ID_LADDER){
-        state.give_ladder();
+        let identifier = get_identifier(*player_pos);
+        for (entity, (_, id, _)) in
+        world().query::<(&Item, &mut Identifier, &mut Ladder)>().iter()
+        {
+            if id.x == identifier.x && id.y == identifier.y {
+                commands().despawn(entity);
+                state.pickup_ladder();
+            }
+
+        }
     }
 }

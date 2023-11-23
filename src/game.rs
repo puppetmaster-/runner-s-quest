@@ -98,6 +98,7 @@ fn handle_input(state: &mut GameState, c: &mut EngineContext) {
         Scene::Game => {
             if is_key_pressed(KeyCode::Escape) {
                 println!("switch to loadMenu!");
+                state.restart();
                 dispawn_all();
                 state.scene = Scene::LoadMenu;
             }
@@ -138,7 +139,6 @@ fn draw_enter_transition(state: &mut GameState) {
 
 
 fn draw_play(state: &GameState) {
-    println!("draw_play");
     state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("deco2"), 7, WHITE);
     state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("deco"), 6, WHITE);
     state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("level"), 3, WHITE);
@@ -147,7 +147,6 @@ fn draw_play(state: &GameState) {
 }
 
 fn draw_menu(_state: &GameState) {
-    println!("draw_menu");
     draw_sprite(texture_id("game_logo"), vec2(WINDOW_WIDTH / 2.0, WINDOW_HIGHT / 2.0 * -1.0), WHITE, 0, vec2(128.0 * 2.0, 48.0 * 2.0))
 }
 
@@ -161,14 +160,10 @@ fn update(state: &mut GameState, c: &mut EngineContext) {
 }
 
 fn update_menu(_state: &mut GameState, _c: &mut EngineContext) {
-    println!("update_menu");
+
 }
 
 fn update_play(state: &mut GameState, c: &mut EngineContext) {
-    println!("update_play");
     door::update(state, c);
     items::update(state, c);
 }
-
-
-
