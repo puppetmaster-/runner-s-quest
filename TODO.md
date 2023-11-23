@@ -1,15 +1,17 @@
 ## TODO List
 
-- [ ] Create item pickup functionality
+- [x] Create item pickup functionality
+- [x] ladder item and missing ladder logic
+- [x] key item and door logic
+- [X] spawn door
+- [x] Implement level loading functionality
+- [x] Implement level reloading functionality
+- [x] Create logic for completing a level and loading the next one
 - [ ] Improve collision logic, especially for hanging ladders
 - [ ] Develop new logic for hanging from wire
-- [ ] Implement level loading functionality
-- [ ] Implement level reloading functionality
-- [ ] Create logic for completing a level and loading the next one
 - [ ] Integrate sound effects
 - [ ] Incorporate background music
 - [ ] Design and implement a credits' scene
-- [ ] ladder item and missing ladder logic
-- [ ] key item and door logic
-- [X] spawn door
 - [ ] Implement shaders for the level transition (../shader/scene_change.frag)
+- [ ] setup key for level reloading
+- [ ] UI for display items
