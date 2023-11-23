@@ -47,9 +47,9 @@ pub fn update(state: &mut GameState, c: &mut EngineContext) {
     }
 }
 
-pub(crate) fn exit(state: &mut GameState, player_pos: &Vec2) {
+pub fn exit(state: &mut GameState, player_pos: &Vec2) {
     let id = get_id_logic(state, *player_pos);
-    if id == Some(ID_DOOR) {
+    if id == Some(ID_DOOR) && state.has_key {
         state.exit_level();
     }
 }
