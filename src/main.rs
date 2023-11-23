@@ -37,10 +37,10 @@ pub async fn run() {
         _comfy_default_config,
     );
 
-    let engine = EngineState::new();
-    let game = ComfyGame::new(engine);
+    let mut engine = EngineState::new();
+    let game = ComfyGame::new(&mut engine);
 
-    run_comfy_main_async(game).await;
+    run_comfy_main_async(game, engine).await;
 }
 
 pub fn _comfy_default_config(config: GameConfig) -> GameConfig {
