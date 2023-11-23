@@ -66,13 +66,21 @@ fn setup_load_menu(state: &mut GameState) {
 
 fn setup_load_level(state: &mut GameState) {
     println!("setup_load_level");
-    //TODO dispawn everything
+    dispawn_all();
     items::spawn_ladders(state);
     items::spawn_pulleys(state);
     items::spawn_keys(state);
     player::spawns(state);
     door::spawns(state);
     state.scene = Scene::EnterLevel;
+}
+
+fn dispawn_all() {
+    for (entity, _) in
+    world().query::<(&mut Transform)>().iter()
+    {
+        commands().despawn(entity);
+    }
 }
 
 
@@ -90,6 +98,7 @@ fn handle_input(state: &mut GameState, c: &mut EngineContext) {
         Scene::Game => {
             if is_key_pressed(KeyCode::Escape) {
                 println!("switch to loadMenu!");
+                dispawn_all();
                 state.scene = Scene::LoadMenu;
             }
             player::handle_input(state, c);
