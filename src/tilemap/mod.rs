@@ -155,7 +155,7 @@ impl Tilemap {
         let y = (position.y * -1.0) / self.tile_height as f32;
         let x_pos = x as i32 * self.tile_width;
         let y_pos = y as i32 * self.tile_height;
-        Rect::new(x_pos as f32, y_pos as f32, self.tile_width as f32, self.tile_height as f32)
+        Rect::from_xywh(x_pos as f32, y_pos as f32, self.tile_width as f32, self.tile_height as f32)
     }
 
     //OK
@@ -184,7 +184,7 @@ impl Tilemap {
     pub fn get_irect_from_id(&self, id: u32) -> IRect {
         let rect = self.tile_rectangles[&id];
         IRect {
-            offset: IVec2::new(rect.x as i32, rect.y as i32),
+            offset: IVec2::new(rect.x() as i32, rect.y() as i32),
             size: IVec2::new(16, 16),
         }
     }
@@ -217,10 +217,10 @@ impl Tilemap {
     }
     //TODO
     fn is_inside_viewport(&self, position: Vec2) -> bool {
-        !(position.x < self.viewport.x ||
-            position.y < self.viewport.y ||
-            position.x > self.viewport.x + self.viewport.w ||
-            position.y > self.viewport.y + self.viewport.h
+        !(position.x < self.viewport.x() ||
+            position.y < self.viewport.y() ||
+            position.x > self.viewport.x() + self.viewport.w() ||
+            position.y > self.viewport.y() + self.viewport.h()
         )
     }
 
@@ -297,12 +297,12 @@ pub struct Tile {
 
 fn get_tile_rectangles(clip: Rect, tile_width: i32, tile_height: i32) -> HashMap<u32, Rect> {
     let mut id = 0;
-    let x = clip.h as i32 / tile_width;
-    let y = clip.w as i32 / tile_height;
+    let x = clip.h() as i32 / tile_width;
+    let y = clip.w() as i32 / tile_height;
     let mut tile_rectangles: HashMap<u32, Rect> = HashMap::with_capacity((x * y) as usize);
     for i in 0..x {
         for j in 0..y {
-            let rec = Rect::new(clip.x + (j * tile_width) as f32, clip.y + (i * tile_height) as f32, tile_width as f32, tile_height as f32); //switch x and y axis
+            let rec = Rect::from_xywh(clip.x() + (j * tile_width) as f32, clip.y() + (i * tile_height) as f32, tile_width as f32, tile_height as f32); //switch x and y axis
             tile_rectangles.insert(id, rec);
             id += 1;
         }
@@ -379,5 +379,5 @@ impl Default for Tile {
     }
 }
 
-const DEFAULT_RECTANGLE: Rect = Rect { x: 0.0, y: 0.0, w: 0.0, h: 0.0 };
+const DEFAULT_RECTANGLE: Rect = Rect { center: Vec2::ZERO, size: Vec2::ZERO };
 const DEFAULT_LAYER_TO_DRAW: i64 = -1;

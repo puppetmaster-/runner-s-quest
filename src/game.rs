@@ -9,27 +9,20 @@ use crate::tilemap::tilemap_helper::TILEMAP_ORIGIN;
 
 
 pub struct ComfyGame {
-    pub engine: EngineState,
     pub state: Option<GameState>,
 }
 
 impl ComfyGame {
-    pub fn new(engine: EngineState) -> Self {
-        Self {
-            state: None,
-            engine,
-        }
-    }
 }
 
 impl GameLoop for ComfyGame {
-    fn engine(&mut self) -> &mut EngineState {
-        &mut self.engine
+    fn new(_engine: &mut EngineState) -> Self {
+        Self {
+            state: None,
+        }
     }
 
-    fn update(&mut self) {
-        let mut c = self.engine.make_context();
-
+    fn update(&mut self, c: &mut EngineContext) {
         if self.state.is_none() {
             // debug mode
             //game_config_mut().dev.show_fps = true;
@@ -37,23 +30,23 @@ impl GameLoop for ComfyGame {
             c.renderer.window().set_resizable(false);
             main_camera_mut().zoom = WINDOW_WIDTH / 2.0;
             main_camera_mut().center = vec2(WINDOW_WIDTH / 2.0, -WINDOW_HIGHT / 2.0);
-            load_sprites(&mut c);
+            load_sprites(c);
             let state = GameState::new(tilemap_helper::load_levels());
             self.state = Some(state);
         }
 
         if let Some(state) = self.state.as_mut() {
-            run_early_update_stages(&mut c);
+            run_early_update_stages(c);
 
-            setup(state, &mut c);
+            setup(state, c);
 
-            handle_input(state, &mut c);
+            handle_input(state, c);
 
-            update(state, &mut c);
+            update(state, c);
 
             draw(state);
 
-            run_late_update_stages(&mut c, delta());
+            run_late_update_stages(c, delta());
         }
     }
 }

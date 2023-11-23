@@ -131,7 +131,7 @@ pub fn get_tile_rectangles(texture_height: i32, texture_width: i32, tile_width: 
     let y = i64::from(texture_height) / tile_height;
     for i in 0..x{
         for j in 0..y{
-            let rec = Rect::new((j*tile_width) as f32,(i*tile_height) as f32, tile_width as f32, tile_height as f32); //switch x and y axis
+            let rec = Rect::from_xywh((j*tile_width) as f32,(i*tile_height) as f32, tile_width as f32, tile_height as f32); //switch x and y axis
             tile_rectangles.insert(id,rec);
             id +=1;
         }
