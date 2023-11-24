@@ -26,6 +26,10 @@ pub fn load_sprites(c: &mut EngineContext) {
         include_bytes!("../assets/player/player jump 48x48.png"),
     );
     c.load_texture_from_bytes(
+        "player_hang",
+        include_bytes!("../assets/player/player hanging 48x48-Sheet.png"),
+    );
+    c.load_texture_from_bytes(
         "sprites",
         include_bytes!("../assets/sprite.png"),
     );

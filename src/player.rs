@@ -10,7 +10,7 @@ pub struct Player;
 
 pub fn spawns(state: &mut GameState) {
     let player_spawn_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), 16);
-    spawn(player_spawn_pos[0] + TILEMAP_ORIGIN + vec2(0.0, -5.0));
+    spawn(player_spawn_pos[0] + TILEMAP_ORIGIN + vec2(0.0, -11.0));
 }
 
 pub fn spawn(pos: Vec2) {
@@ -35,6 +35,13 @@ pub fn spawn(pos: Vec2) {
             })
             .add_animation("climb", 0.15, true, AnimationSource::Spritesheet {
                 name: "player_climb".into(),
+                spritesheet: Spritesheet {
+                    rows: 1,
+                    columns: 4,
+                },
+            })
+            .add_animation("hang", 0.15, true, AnimationSource::Spritesheet {
+                name: "player_hang".into(),
                 spritesheet: Spritesheet {
                     rows: 1,
                     columns: 4,
