@@ -1,5 +1,4 @@
 use comfy::*;
-use comfy::log::{Level, log};
 
 use crate::{door, items, player, WINDOW_HIGHT, WINDOW_WIDTH};
 use crate::assets::load_sprites;
@@ -73,7 +72,7 @@ fn setup_load_level(state: &mut GameState) {
 
 fn dispawn_all() {
     for (entity, _) in
-    world().query::<(&mut Transform)>().iter()
+    world().query::<&mut Transform>().iter()
     {
         commands().despawn(entity);
     }
