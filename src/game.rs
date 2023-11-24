@@ -36,8 +36,6 @@ impl GameLoop for ComfyGame {
         }
 
         if let Some(state) = self.state.as_mut() {
-            run_early_update_stages(c);
-
             setup(state, c);
 
             handle_input(state, c);
@@ -45,8 +43,6 @@ impl GameLoop for ComfyGame {
             update(state, c);
 
             draw(state);
-
-            run_late_update_stages(c, delta());
         }
     }
 }
