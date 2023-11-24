@@ -135,7 +135,7 @@ fn draw_enter_transition(state: &mut GameState) {
 
 
 fn draw_play(state: &GameState) {
-    state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("deco2"), 7, WHITE);
+    state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("deco2"), 100, WHITE);
     state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("deco"), 6, WHITE);
     state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("level"), 3, WHITE);
     state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("background"), 2, GRAY);

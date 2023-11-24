@@ -25894,7 +25894,7 @@
                 {
                     "x": 35,
                     "flipX": false,
-                    "tile": 50,
+                    "tile": -1,
                     "index": 1187,
                     "rot": 0,
                     "y": 18
@@ -26406,7 +26406,7 @@
                 {
                     "x": 35,
                     "flipX": false,
-                    "tile": 58,
+                    "tile": -1,
                     "index": 1251,
                     "rot": 0,
                     "y": 19
@@ -42284,7 +42284,7 @@
                 {
                     "x": 35,
                     "flipX": false,
-                    "tile": -1,
+                    "tile": 50,
                     "index": 1187,
                     "rot": 0,
                     "y": 18
@@ -42796,7 +42796,7 @@
                 {
                     "x": 35,
                     "flipX": false,
-                    "tile": -1,
+                    "tile": 58,
                     "index": 1251,
                     "rot": 0,
                     "y": 19
