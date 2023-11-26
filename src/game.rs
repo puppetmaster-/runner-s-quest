@@ -1,6 +1,6 @@
 use comfy::*;
 
-use crate::{door, items, player, WINDOW_HIGHT, WINDOW_WIDTH};
+use crate::{door, items, particles, player, WINDOW_HIGHT, WINDOW_WIDTH};
 use crate::assets::load_sprites;
 use crate::state::{GameState, Scene};
 use crate::tilemap::tilemap_helper;
@@ -65,6 +65,7 @@ fn setup_load_level(state: &mut GameState) {
     items::spawn_ladders(state);
     items::spawn_pulleys(state);
     items::spawn_keys(state);
+    particles::spawn(state);
     player::spawns(state);
     door::spawns(state);
     state.scene = Scene::EnterLevel;
@@ -138,7 +139,7 @@ fn draw_play(state: &GameState) {
     state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("deco"), 6, WHITE);
     state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("level"), 3, WHITE);
     state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("background"), 2, GRAY);
-    state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("background2"), 1, GRAY);
+    state.tilemap.draw(texture_id("tileset"), TILEMAP_ORIGIN, state.tilemap.get_layer_id("background2"), 1, DARKBROWN);
 }
 
 fn draw_menu(_state: &GameState) {
