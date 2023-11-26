@@ -1,3 +1,5 @@
+extern crate core;
+
 use comfy::*;
 
 use crate::game::ComfyGame;
@@ -10,6 +12,7 @@ mod player;
 mod items;
 mod assets;
 mod door;
+mod particles;
 
 const WINDOW_WIDTH: f32 = 1024.0;
 const WINDOW_HIGHT: f32 = 512.0;
