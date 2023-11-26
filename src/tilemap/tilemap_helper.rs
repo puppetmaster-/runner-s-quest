@@ -11,6 +11,7 @@ const ID_WALL_1: u32 = 0;
 const ID_WALL_2: u32 = 1;
 const ID_LADDER: u32 = 8;
 const ID_MISSING_LADDER: u32 = 17;
+const ID_LINE: u32 = 9;
 
 pub fn set_ladder_at(state: &mut GameState, pos:Vec2 ){
     state.tilemap.set_new_id_at(state.tilemap.get_layer_id("level"),8,pos);
@@ -31,6 +32,9 @@ pub fn is_ladder_and(ids: &[Option<u32>]) -> bool {
 
 pub fn is_ladder_or(ids: &[Option<u32>]) -> bool {
     return ids.iter().any(|id| *id == Some(ID_LADDER));
+}
+pub fn is_line(id: Option<u32>) -> bool{
+    id == Some(ID_LINE)
 }
 
 pub fn is_wall(id: Option<u32>) -> bool {

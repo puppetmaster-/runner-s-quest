@@ -5,6 +5,7 @@ pub struct GameState {
     tilemaps: Vec<Tilemap>,
     pub tilemap: Tilemap,
     pub climb_timer: f32,
+    pub hang_timer: f32,
     pub level: usize,
     max_level: usize,
     pub has_key: bool,
@@ -13,7 +14,7 @@ pub struct GameState {
 
 impl GameState {
     pub fn new(tilemaps: Vec<Tilemap>) -> Self {
-        let level = 1;
+        let level = 5;
         let tilemap = tilemaps[level - 1].clone();
         let max = tilemaps.len() + 1;
         Self {
@@ -21,6 +22,7 @@ impl GameState {
             tilemaps,
             tilemap,
             climb_timer: 0.0,
+            hang_timer: 0.0,
             level,
             max_level: max,
             has_key: false,
@@ -32,6 +34,7 @@ impl GameState {
         self.ladder = 0;
         self.has_key = false;
         self.climb_timer = 0.0;
+        self.hang_timer = 0.0;
         self.tilemap = self.tilemaps[self.level - 1].clone();
     }
 
@@ -40,6 +43,7 @@ impl GameState {
         self.ladder = 0;
         self.has_key = false;
         self.climb_timer = 0.0;
+        self.hang_timer = 0.0;
         if self.level < self.max_level {
             println!("go loading next level");
             self.level += 1;

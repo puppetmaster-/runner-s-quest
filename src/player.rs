@@ -2,7 +2,7 @@ use comfy::*;
 use crate::{door, items};
 
 use crate::state::GameState;
-use crate::tilemap::tilemap_helper::{get_id, is_air, is_ladder, is_ladder_or, is_missing_ladder, is_not_wall, set_ladder_at};
+use crate::tilemap::tilemap_helper::{get_id, is_air, is_ladder, is_ladder_or, is_missing_ladder, is_not_wall, set_ladder_at, is_line};
 
 use crate::tilemap::tilemap_helper::TILEMAP_ORIGIN;
 
@@ -47,6 +47,13 @@ pub fn spawn(pos: Vec2) {
                     columns: 4,
                 },
             })
+            .add_animation("hang_idle", 0.15, true, AnimationSource::Spritesheet {
+                name: "player_hang".into(),
+                spritesheet: Spritesheet {
+                    rows: 1,
+                    columns: 4,
+                },
+            })
             .add_animation("climb_idle", 0.1, true, AnimationSource::Spritesheet {
                 name: "player_climb".into(),
                 spritesheet: Spritesheet {
@@ -83,6 +90,7 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
         let check_ladder_pos = pos + vec2(0.0, -7.0);
         let check_ladder_pos_down = pos + vec2(0.0, -9.0);
         let check_ladder_pos_head = pos + vec2(0.0, 8.0);
+        let pos_line = pos + vec2(0.0, 16.0);
         let pos_floor_1 = pos - vec2(7.0, 8.0);
         let pos_floor_2 = pos + vec2(7.0, -8.0);
         let pos_floor_3 = pos - vec2(7.0, 9.0);
@@ -97,22 +105,32 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
         let id_floor_4 = get_id(state, pos_floor_4);
         let id_move_left = get_id(state, check_move_left);
         let id_move_right = get_id(state, check_move_right);
+        let id_line = get_id(state, pos_line);
 
         let mut moved = false;
         let mut climb = false;
         let mut fall = false;
+        let mut line = false;
         let speed = 60.0;
         let mut move_dir = Vec2::ZERO;
 
-        if (is_air(id_floor_1) && is_air(id_floor_2)) || (is_air(id_floor_3) && is_air(id_floor_4)) {
+        if is_action_up() && is_line(id_line) || are_we_hanging(animated_sprite) {
+            line = true
+        }
+        if is_action_down() && are_we_hanging(animated_sprite) {
+            line = false;
+        }
+        if are_we_hanging(animated_sprite) && !is_line(id_line) {
+            line = false;
+        }
+        if is_missing_ladder(id_middle) && is_action_up() && state.give_ladder(){
+            set_ladder_at(state,pos);
+        }
+        if ((is_air(id_floor_1) && is_air(id_floor_2)) || (is_air(id_floor_3) && is_air(id_floor_4)) ) && !line  {
+            println!("fall");
             move_dir.y -= 1.0;
             fall = true;
         } else {
-            if is_missing_ladder(id_middle) && is_action_up() && state.give_ladder(){
-                set_ladder_at(state,pos);
-                move_dir.y += 1.0;
-                climb = true;
-            }
             if is_action_up() && (is_ladder(id_ladder_up) || is_ladder(id_middle)) {
                 move_dir.y += 1.0;
                 climb = true;
@@ -122,25 +140,41 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
                 climb = true;
             }
             if is_action_left() {
+                println!("left");
                 move_dir.x -= 1.0;
                 moved = true;
             }
             if is_action_right() {
+                println!("right");
                 move_dir.x += 1.0;
                 moved = true;
             }
         }
 
         if moved {
+            println!("moved");
             animated_sprite.flip_x = move_dir.x < 0.0;
             let dis = move_dir.normalize_or_zero() * speed * dt;
             let id_left = get_id(state, check_move_left + dis);
             let id_right = get_id(state, check_move_right + dis);
             if move_dir.x < 0.0 && is_not_wall(id_left) || move_dir.x > 0.0 && is_not_wall(id_right) {
+                println!("moveing");
                 transform.position += dis;
-                if !(are_we_climbing(animated_sprite) && is_ladder_or(&[id_middle, id_floor_1, id_floor_2, id_right, id_left])) {
-                    animated_sprite.play("run");
+                if !line{
+                    if !(are_we_climbing(animated_sprite) && is_ladder_or(&[id_middle, id_floor_1, id_floor_2, id_right, id_left])) {
+                        println!("run");
+                        animated_sprite.play("run");
+                    }
+                }else{
+                    animated_sprite.play("hang");
                 }
+            }
+        } else if line{
+            if animated_sprite.state.animation_name == "hang_idle" {
+                animated_sprite.state.timer = state.climb_timer;
+            } else {
+                animated_sprite.play("hang_idle");
+                animated_sprite.state.timer = state.climb_timer;
             }
         } else if climb {
             transform.position += move_dir.normalize_or_zero() * (speed - 20.0) * dt;
@@ -151,7 +185,6 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
                 animated_sprite.play("climb");
             }
         } else if fall {
-
             let dis = move_dir.normalize_or_zero() * (speed + 20.0) * dt;
             transform.position += dis;
             animated_sprite.play("fall");
@@ -171,15 +204,18 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
 
         door::exit(state,&pos);
 
-        //draw_circle(pos,2.0,WHITE,100);
-        //draw_circle(check_move_left, 1.0, GREEN, 100);
-        //draw_circle(check_move_right, 1.0, GREEN, 100);
+        /*
+        draw_circle(pos,2.0,WHITE,100);
+        draw_circle(check_move_left, 1.0, GREEN, 100);
+        draw_circle(check_move_right, 1.0, GREEN, 100);
 
-        //draw_circle(pos,1.0,WHITE,100);
-        //draw_circle(check_ladder_pos, 1.0,PINK,100);
-        //draw_circle(check_ladder_pos_down, 1.0,PINK,100);
-        //draw_circle(check_ladder_pos_head, 1.0,PINK,100);
-        //draw_rect_outline(pos,splat(16.0),2.0,WHITE,0);
+        draw_circle(pos,1.0,WHITE,100);
+        draw_circle(check_ladder_pos, 1.0,PINK,100);
+        draw_circle(check_ladder_pos_down, 1.0,PINK,100);
+        draw_circle(check_ladder_pos_head, 1.0,PINK,100);
+        draw_rect_outline(pos,splat(16.0),2.0,WHITE,0);
+        draw_circle(pos_line, 1.0,RED,100);
+        */
         //println!("Player pos {}", transform.position);
     }
 }
@@ -202,4 +238,8 @@ pub fn is_action_right() -> bool {
 
 pub fn are_we_climbing(animated_sprite: &AnimatedSprite) -> bool {
     animated_sprite.state.animation_name == "climb_idle" || animated_sprite.state.animation_name == "climb"
+}
+
+pub fn are_we_hanging(animated_sprite: &AnimatedSprite) -> bool {
+    animated_sprite.state.animation_name == "hang_idle" || animated_sprite.state.animation_name == "hang"
 }

@@ -27,7 +27,7 @@ pub fn load_sprites(c: &mut EngineContext) {
     );
     c.load_texture_from_bytes(
         "player_hang",
-        include_bytes!("../assets/player/player hanging 48x48-Sheet.png"),
+        include_bytes!("../assets/player/player hanging 48x48.png"),
     );
     c.load_texture_from_bytes(
         "sprites",
@@ -36,5 +36,9 @@ pub fn load_sprites(c: &mut EngineContext) {
     c.load_texture_from_bytes(
         "door",
         include_bytes!("../assets/door_16x32.png"),
+    );
+    c.load_texture_from_bytes(
+        "particle",
+        include_bytes!("../assets/sprite_5.png"),
     );
 }
