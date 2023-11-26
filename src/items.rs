@@ -15,7 +15,7 @@ pub struct Identifier { x: i32, y: i32, }
 
 
 pub fn spawn_ladders(state: &mut GameState) {
-    let positions = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), ID_LADDER);
+    let positions = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), &ID_LADDER);
     for p in positions {
         spawn_ladder(p + TILEMAP_ORIGIN + vec2(0.0, -8.0));
     }
@@ -50,7 +50,7 @@ fn get_identifier(pos: Vec2) -> Identifier {
 }
 
 pub fn spawn_pulleys(state: &mut GameState) {
-    let positions = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), ID_PULLEY);
+    let positions = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), &ID_PULLEY);
     for p in positions {
         spawn_pulley(p + TILEMAP_ORIGIN + vec2(0.0, -8.0));
     }
@@ -78,7 +78,7 @@ pub fn spawn_pulley(pos: Vec2) {
 }
 
 pub fn spawn_keys(state: &mut GameState) {
-    let positions = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), ID_KEY);
+    let positions = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), &ID_KEY);
     for p in positions {
         spawn_key(p + TILEMAP_ORIGIN + vec2(0.0, -8.0));
     }

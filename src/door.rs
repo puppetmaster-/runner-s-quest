@@ -8,7 +8,7 @@ const ID_DOOR: u32 = 11;
 
 pub struct Door;
 pub fn spawns(state: &mut GameState) {
-    let door_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), ID_DOOR);
+    let door_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), &ID_DOOR);
     spawn(door_pos[0] + TILEMAP_ORIGIN + vec2(0.0, -8.0));
 }
 

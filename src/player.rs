@@ -9,7 +9,7 @@ use crate::tilemap::tilemap_helper::TILEMAP_ORIGIN;
 pub struct Player;
 
 pub fn spawns(state: &mut GameState) {
-    let player_spawn_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), 16);
+    let player_spawn_pos = state.tilemap.get_all_position_from_id(state.tilemap.get_layer_id("logic"), &16);
     spawn(player_spawn_pos[0] + TILEMAP_ORIGIN + vec2(0.0, -11.0));
 }
 

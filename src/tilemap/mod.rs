@@ -61,12 +61,12 @@ impl Tilemap {
      */
 
     //TODO
-    pub fn get_all_position_from_id(&self, layer: usize, id: u32) -> Vec<Vec2> {
+    pub fn get_all_position_from_id(&self, layer: usize, id: &u32) -> Vec<Vec2> {
         let mut positions = Vec::new();
         if let Some(layer) = self.layers.get(layer) {
             let tiles = &*layer.tiles.get_data();
             for (_i, t) in tiles.iter().enumerate() {
-                if t.is_some() && t.as_ref().unwrap().id == id {
+                if t.is_some() && &t.as_ref().unwrap().id == id {
                     let pos = Vec2::new(t.as_ref().unwrap().position_x, t.as_ref().unwrap().position_y * -1.0);
                     positions.push(pos);
                     //let x = (i % self.width) * self.tile_width as usize;
@@ -202,11 +202,21 @@ impl Tilemap {
                     match tile {
                         None => (),
                         Some(tile) => {
-                            let tmp_pos = Vec2::new(pos.x + tile.position_x, (pos.y + tile.position_y) * -1.0);
-                            draw_sprite_ex(texture, tmp_pos, tint, z_index,
+                            let mut draw_pos = Vec2::new(pos.x + tile.position_x, (pos.y + tile.position_y) * -1.0);
+                            let flip_x = tile.scale.x < 1.0;
+                            let flip_y = tile.scale.y < 1.0;
+                            if flip_x{
+                                draw_pos += vec2(-16.0,0.0);
+                            }
+                            if flip_y{
+                                draw_pos += vec2(0.0,-16.0);
+                            }
+                            draw_sprite_ex(texture, draw_pos, tint, z_index,
                                            DrawTextureParams {
                                                dest_size: Some(vec2(16.0, 16.0).as_world_size()),
                                                source_rect: Some(self.get_irect_from_id(tile.id)),
+                                               flip_x,
+                                               flip_y,
                                                ..Default::default()
                                            });
                         }
@@ -284,7 +294,7 @@ pub struct Layer {
 }
 
 #[allow(dead_code)]
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Tile {
     id: u32,
     x: i32,
