@@ -7,11 +7,15 @@
 - [x] Implement level loading functionality
 - [x] Implement level reloading functionality
 - [x] Create logic for completing a level and loading the next one
-- [ ] Improve collision logic, especially for hanging ladders
-- [ ] Develop new logic for hanging from wire
-- [ ] Integrate sound effects
-- [ ] Incorporate background music
+- [X] Develop new logic for hanging from wire
+- [X] Integrate sound effects
+- [X] Incorporate background music
 - [ ] Design and implement a credits' scene
 - [ ] Implement shaders for the level transition (../shader/scene_change.frag)
 - [ ] setup key for level reloading
 - [ ] UI for display items
+- [ ] Improve collision logic, especially for hanging ladders
+- [ ] tell a story
+- [ ] more levels
+- [ ] real player art
+- [ ] animate menu scene
