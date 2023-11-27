@@ -1,3 +1,4 @@
+use comfy::play_sound;
 use crate::tilemap::Tilemap;
 
 pub struct GameState {
@@ -14,7 +15,7 @@ pub struct GameState {
 
 impl GameState {
     pub fn new(tilemaps: Vec<Tilemap>) -> Self {
-        let level = 5;
+        let level = 1;
         let tilemap = tilemaps[level - 1].clone();
         let max = tilemaps.len() + 1;
         Self {
@@ -72,6 +73,13 @@ impl GameState {
     pub fn pickup_ladder(&mut self){
         println!("pickup_ladder");
         self.ladder += 1;
+        play_sound("ladder_collected");
+    }
+
+    pub fn pickup_key(&mut self){
+        println!("pickup_key");
+        self.has_key = true;
+        play_sound("key_collected");
     }
 }
 

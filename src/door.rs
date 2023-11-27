@@ -28,6 +28,7 @@ pub fn spawn(pos: Vec2) {
             })
             .size(vec2(16.0, 32.0))
             .blend_mode(BlendMode::Alpha)
+            .on_finished(Box::new(|_| play_sound("door_open")))
             .build(),
     ));
 }
@@ -42,7 +43,9 @@ pub fn update(state: &mut GameState, c: &mut EngineContext) {
             animated_sprite.play("close");
             animated_sprite.state.timer = 0.0;
         } else {
-            animated_sprite.play("open");
+            if animated_sprite.state.current_frame < 1{
+                animated_sprite.play("open");
+            }
         }
     }
 }

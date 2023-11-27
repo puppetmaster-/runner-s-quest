@@ -1,7 +1,7 @@
 use comfy::*;
 
 use crate::{door, items, particles, player, WINDOW_HIGHT, WINDOW_WIDTH};
-use crate::assets::load_sprites;
+use crate::assets::{load_music, load_sound, load_sprites};
 use crate::state::{GameState, Scene};
 use crate::tilemap::tilemap_helper;
 use crate::tilemap::tilemap_helper::TILEMAP_ORIGIN;
@@ -30,6 +30,8 @@ impl GameLoop for ComfyGame {
             main_camera_mut().zoom = WINDOW_WIDTH / 2.0;
             main_camera_mut().center = vec2(WINDOW_WIDTH / 2.0, -WINDOW_HIGHT / 2.0);
             load_sprites(c);
+            load_sound();
+            load_music();
             let state = GameState::new(tilemap_helper::load_levels());
             self.state = Some(state);
         }
@@ -57,10 +59,15 @@ fn setup(state: &mut GameState, _c: &mut EngineContext) {
 fn setup_load_menu(state: &mut GameState) {
     println!("setup_load_menu");
     state.scene = Scene::Menu;
+    play_music("game_music");
+    play_sound("welcome");
 }
 
 fn setup_load_level(state: &mut GameState) {
     println!("setup_load_level");
+    if state.level == 1{
+        play_sound("hello");
+    }
     dispawn_all();
     items::spawn_ladders(state);
     items::spawn_pulleys(state);

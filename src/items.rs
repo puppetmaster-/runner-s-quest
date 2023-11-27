@@ -128,10 +128,10 @@ pub fn get_tween() -> Tween {
 pub(crate) fn pickup(state: &mut GameState, player_pos: &Vec2) {
     let id = get_id_logic(state, *player_pos);
     if id == Some(ID_KEY){
-        state.has_key = true;
         for (entity, (_, transform, _)) in
         world().query::<(&Item, &mut Transform, &mut Key)>().iter()
         {
+            state.pickup_key();
             commands().despawn(entity);
         }
     }
@@ -141,8 +141,9 @@ pub(crate) fn pickup(state: &mut GameState, player_pos: &Vec2) {
         world().query::<(&Item, &mut Identifier, &mut Ladder)>().iter()
         {
             if id.x == identifier.x && id.y == identifier.y {
-                commands().despawn(entity);
                 state.pickup_ladder();
+                commands().despawn(entity);
+
             }
 
         }

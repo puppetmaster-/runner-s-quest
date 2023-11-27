@@ -1,4 +1,50 @@
-use comfy::*;
+use std::time::Duration;
+use comfy::kira::tween::{Easing, Tween};
+use comfy::{EngineContext, load_sound_from_bytes, quad_in_out, StaticSoundSettings};
+use comfy::kira::StartTime;
+use comfy::kira::tween::Easing::InOutPowf;
+
+pub fn load_music(){
+    load_sound_from_bytes(
+        "game_music",
+        include_bytes!("../assets/music/MUSIC.ogg"),
+        StaticSoundSettings::new().loop_region(..)
+            .volume(0.2)
+            .fade_in_tween(Some(Tween{
+                start_time: StartTime::Immediate,
+                duration: Duration::from_secs(5),
+                easing: InOutPowf(10.0),
+            }))
+    );
+}
+
+pub fn load_sound(){
+    load_sound_from_bytes(
+        "key_collected",
+        include_bytes!("../assets/sound/key_collected.ogg"),
+        StaticSoundSettings::default(),
+    );
+    load_sound_from_bytes(
+        "ladder_collected",
+        include_bytes!("../assets/sound/ladder_collected.ogg"),
+        StaticSoundSettings::default(),
+    );
+    load_sound_from_bytes(
+        "welcome",
+        include_bytes!("../assets/sound/welcome.ogg"),
+        StaticSoundSettings::default(),
+    );
+    load_sound_from_bytes(
+        "door_open",
+        include_bytes!("../assets/sound/door_open.ogg"),
+        StaticSoundSettings::default(),
+    );
+    load_sound_from_bytes(
+        "hello",
+        include_bytes!("../assets/sound/hello.ogg"),
+        StaticSoundSettings::default(),
+    );
+}
 
 pub fn load_sprites(c: &mut EngineContext) {
     c.load_texture_from_bytes(
