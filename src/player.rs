@@ -91,6 +91,8 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
         let check_ladder_pos_down = pos + vec2(0.0, -9.0);
         let check_ladder_pos_head = pos + vec2(0.0, 8.0);
         let pos_line = pos + vec2(0.0, 16.0);
+        let pos_line_falling = pos + vec2(0.0, 24.0);
+        let pos_line_falling2 = pos + vec2(0.0, 9.0);
         let pos_floor_1 = pos - vec2(7.0, 8.0);
         let pos_floor_2 = pos + vec2(7.0, -8.0);
         let pos_floor_3 = pos - vec2(7.0, 9.0);
@@ -106,6 +108,8 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
         let id_move_left = get_id(state, check_move_left);
         let id_move_right = get_id(state, check_move_right);
         let id_line = get_id(state, pos_line);
+        let id_line_falling = get_id(state, pos_line_falling);
+        let id_line_falling2 = get_id(state, pos_line_falling2);
 
         let mut moved = false;
         let mut climb = false;
@@ -114,7 +118,10 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
         let speed = 60.0;
         let mut move_dir = Vec2::ZERO;
 
-        if is_action_up() && is_line(id_line) || are_we_hanging(animated_sprite) {
+        if is_action_up() && is_line(id_line) && !are_we_falling(animated_sprite) || are_we_hanging(animated_sprite) {
+            line = true
+        }
+        if is_line(id_line_falling) && is_line(id_line_falling2) && are_we_falling(animated_sprite) {
             line = true
         }
         if is_action_down() && are_we_hanging(animated_sprite) {
@@ -204,8 +211,9 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
 
         door::exit(state,&pos);
 
+
+        draw_circle(pos_line_falling,1.0,WHITE,100);
         /*
-        draw_circle(pos,2.0,WHITE,100);
         draw_circle(check_move_left, 1.0, GREEN, 100);
         draw_circle(check_move_right, 1.0, GREEN, 100);
 
@@ -242,4 +250,8 @@ pub fn are_we_climbing(animated_sprite: &AnimatedSprite) -> bool {
 
 pub fn are_we_hanging(animated_sprite: &AnimatedSprite) -> bool {
     animated_sprite.state.animation_name == "hang_idle" || animated_sprite.state.animation_name == "hang"
+}
+
+pub fn are_we_falling(animated_sprite: &AnimatedSprite) -> bool {
+    animated_sprite.state.animation_name == "fall"
 }
