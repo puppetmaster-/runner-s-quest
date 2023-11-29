@@ -9,7 +9,7 @@ pub fn load_music(){
         "game_music",
         include_bytes!("../assets/music/MUSIC.ogg"),
         StaticSoundSettings::new().loop_region(..)
-            .volume(0.2)
+            .volume(0.1)
             .fade_in_tween(Some(Tween{
                 start_time: StartTime::Immediate,
                 duration: Duration::from_secs(5),
@@ -44,6 +44,16 @@ pub fn load_sound(){
         include_bytes!("../assets/sound/hello.ogg"),
         StaticSoundSettings::default(),
     );
+    load_sound_from_bytes(
+        "congrats",
+        include_bytes!("../assets/sound/congraz.ogg"),
+        StaticSoundSettings::default(),
+    );
+    load_sound_from_bytes(
+        "thank_you",
+        include_bytes!("../assets/sound/thank_you.ogg"),
+        StaticSoundSettings::default(),
+    );
 }
 
 pub fn load_sprites(c: &mut EngineContext) {
@@ -54,6 +64,18 @@ pub fn load_sprites(c: &mut EngineContext) {
     c.load_texture_from_bytes(
         "game_logo",
         include_bytes!("../assets/game_logo.png"),
+    );
+    c.load_texture_from_bytes(
+        "thank_you",
+        include_bytes!("../assets/thank_you.png"),
+    );
+    c.load_texture_from_bytes(
+        "bg_sky",
+        include_bytes!("../assets/background_color_sky.png"),
+    );
+    c.load_texture_from_bytes(
+        "created",
+        include_bytes!("../assets/created.png"),
     );
     c.load_texture_from_bytes(
         "player_idle",
