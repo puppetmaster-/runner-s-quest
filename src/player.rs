@@ -212,7 +212,7 @@ pub fn handle_input(state: &mut GameState, c: &mut EngineContext) {
         door::exit(state,&pos);
 
 
-        draw_circle(pos_line_falling,1.0,WHITE,100);
+        //draw_circle(pos_line_falling,1.0,WHITE,100);
         /*
         draw_circle(check_move_left, 1.0, GREEN, 100);
         draw_circle(check_move_right, 1.0, GREEN, 100);

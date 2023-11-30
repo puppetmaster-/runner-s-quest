@@ -1,8 +1,11 @@
 use std::time::Duration;
 use comfy::kira::tween::{Easing, Tween};
-use comfy::{EngineContext, load_sound_from_bytes, quad_in_out, StaticSoundSettings};
 use comfy::kira::StartTime;
 use comfy::kira::tween::Easing::InOutPowf;
+use comfy::{EngineContext, load_sound_from_bytes, random_range, roundtrip, Sprite, StaticSoundSettings, Transform, vec2, WHITE, world};
+use comfy::Vec2;
+use comfy::commands;
+use crate::state::GameState;
 
 pub fn load_music(){
     load_sound_from_bytes(
@@ -21,7 +24,7 @@ pub fn load_music(){
 pub fn load_sound(){
     load_sound_from_bytes(
         "key_collected",
-        include_bytes!("../assets/sound/key_collected.ogg"),
+        include_bytes!("../assets/sound/present_collected.ogg"),
         StaticSoundSettings::default(),
     );
     load_sound_from_bytes(
@@ -109,4 +112,30 @@ pub fn load_sprites(c: &mut EngineContext) {
         "particle",
         include_bytes!("../assets/sprite_5.png"),
     );
+}
+
+pub fn spawn_logo(pos: Vec2) {
+    commands().spawn((
+        Transform::position(pos),
+        get_tween(),
+        Sprite::new("game_logo".to_string(), vec2(128.0 * 2.0, 48.0 * 2.0), 100, WHITE),
+    ));
+}
+
+pub fn get_tween() -> comfy::Tween {
+    comfy::Tween::new(-0.1, 0.1, random_range(5.0, 8.0), 0.0, roundtrip)
+}
+
+pub fn update(_state: &mut GameState, c: &mut EngineContext) {
+    let dt = c.delta;
+
+    for (_, (_, transform, tween)) in
+    world().query::<(&Sprite, &mut Transform, &mut comfy::Tween)>().iter()
+    {
+        tween.update(dt);
+        if tween.is_finished() {
+            *tween = get_tween();
+        }
+        transform.position += vec2(0.0, tween.value())
+    }
 }

@@ -23,5 +23,25 @@ version = "1.0"
 
 [profile.dev]
 opt-level = 1
+
 [profile.dev.package."*"]
 opt-level = 1
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = true
+debug-assertions = false
+codegen-units = 1
+panic = 'abort'
+incremental = false
+overflow-checks = true
+
+[build-dependencies.winres]
+version = "0.1"
+
+[build-dependencies.image]
+version = "0.23.4"
+default-features = false
+features = ["ico", "png"]

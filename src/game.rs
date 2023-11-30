@@ -1,6 +1,6 @@
 use comfy::*;
 
-use crate::{door, items, particles, player, WINDOW_HIGHT, WINDOW_WIDTH};
+use crate::{assets, door, items, particles, player, WINDOW_HIGHT, WINDOW_WIDTH};
 use crate::assets::{load_music, load_sound, load_sprites};
 use crate::state::{GameState, Scene};
 use crate::tilemap::tilemap_helper;
@@ -63,6 +63,7 @@ fn setup_load_menu(state: &mut GameState) {
     state.scene = Scene::Menu;
     play_music("game_music");
     play_sound("welcome");
+    assets::spawn_logo(vec2(WINDOW_WIDTH / 2.0, WINDOW_HIGHT / 2.0 * -1.0));
 }
 
 fn setup_load_credit(state: &mut GameState) {
@@ -129,7 +130,7 @@ fn draw_play(state: &GameState) {
 }
 
 fn draw_menu(_state: &GameState) {
-    draw_sprite(texture_id("game_logo"), vec2(WINDOW_WIDTH / 2.0, WINDOW_HIGHT / 2.0 * -1.0), WHITE, 0, vec2(128.0 * 2.0, 48.0 * 2.0))
+    //draw_sprite(texture_id("game_logo"), vec2(WINDOW_WIDTH / 2.0, WINDOW_HIGHT / 2.0 * -1.0), WHITE, 0, vec2(128.0 * 2.0, 48.0 * 2.0))
 }
 
 fn draw_credit(_state: &GameState) {
@@ -156,8 +157,8 @@ fn update(state: &mut GameState, c: &mut EngineContext) {
     }
 }
 
-fn update_menu(_state: &mut GameState, _c: &mut EngineContext) {
-
+fn update_menu(state: &mut GameState, c: &mut EngineContext) {
+    assets::update(state,c);
 }
 
 fn update_play(state: &mut GameState, c: &mut EngineContext) {
@@ -194,6 +195,11 @@ fn handle_input(state: &mut GameState, c: &mut EngineContext) {
             }
         }
         Scene::Game => {
+            if is_key_pressed(KeyCode::R) {
+                println!("switch to loadLevel!");
+                state.restart();
+                state.scene = Scene::LoadLevel;
+            }
             player::handle_input(state, c);
         }
         _ => {}

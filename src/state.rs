@@ -17,7 +17,7 @@ impl GameState {
     pub fn new(tilemaps: Vec<Tilemap>) -> Self {
         let level = 1;
         let tilemap = tilemaps[level - 1].clone();
-        let max = tilemaps.len() + 1;
+        let max = tilemaps.len();
         Self {
             scene: Scene::LoadMenu,
             tilemaps,
