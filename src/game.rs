@@ -23,7 +23,9 @@ impl GameLoop for ComfyGame {
     fn update(&mut self, c: &mut EngineContext) {
         if self.state.is_none() {
             // debug mode
-            //game_config_mut().dev.show_fps = true;
+            // game_config_mut().dev.show_fps = false;
+            // game_config_mut().dev.show_debug = false;
+            // game_config_mut().dev.show_lighting_config = false;
             //c.renderer.window().set_fullscreen(Some(Fullscreen::Borderless(None)));
             c.renderer.window().set_resizable(false);
             main_camera_mut().zoom = WINDOW_WIDTH / 2.0;
@@ -136,9 +138,11 @@ fn draw_menu(_state: &GameState) {
 fn draw_credit(_state: &GameState) {
     //clear_background(Color::rgb8(255, 255, 255));
     //clear_background(Color::rgb8(109, 194, 202));
+    /*
     draw_sprite(
         texture_id("bg_sky"), vec2(WINDOW_WIDTH / 2.0, WINDOW_HIGHT/ 2.0 * -1.0),
         WHITE, 0, vec2(WINDOW_WIDTH , WINDOW_HIGHT));
+     */
     draw_sprite(
         texture_id("thank_you"), vec2(WINDOW_WIDTH / 2.0, WINDOW_HIGHT / 2.0 * -1.0),
         WHITE, 1, vec2(66.0 * 2.0, 40.0 * 2.0));

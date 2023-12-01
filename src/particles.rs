@@ -1,6 +1,8 @@
 use comfy::*;
 use crate::state::GameState;
 
+#[allow(dead_code)]
+
 const PARTICLE_RIGHT: u32 = 54;
 const PARTICLE_LEFT: u32 = 55;
 const PARTICLE_UP: u32 = 62;

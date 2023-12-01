@@ -9,6 +9,7 @@ pub const TILEMAP_ORIGIN: Vec2 = vec2(8.0, 8.0);
 
 const ID_WALL_1: u32 = 0;
 const ID_WALL_2: u32 = 1;
+const ID_WALL_3: u32 = 2;
 const ID_LADDER: u32 = 8;
 const ID_MISSING_LADDER: u32 = 17;
 const ID_LINE: u32 = 9;
@@ -38,7 +39,7 @@ pub fn is_line(id: Option<u32>) -> bool{
 }
 
 pub fn is_wall(id: Option<u32>) -> bool {
-    id == Some(ID_WALL_1) || id == Some(ID_WALL_2)
+    id == Some(ID_WALL_1) || id == Some(ID_WALL_2) || id == Some(ID_WALL_3)
 }
 
 pub fn is_not_wall(id: Option<u32>) -> bool {

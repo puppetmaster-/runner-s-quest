@@ -1,5 +1,5 @@
 use std::time::Duration;
-use comfy::kira::tween::{Easing, Tween};
+use comfy::kira::tween::{Tween};
 use comfy::kira::StartTime;
 use comfy::kira::tween::Easing::InOutPowf;
 use comfy::{EngineContext, load_sound_from_bytes, random_range, roundtrip, Sprite, StaticSoundSettings, Transform, vec2, WHITE, world};
